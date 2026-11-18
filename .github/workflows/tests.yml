@@ -1,0 +1,35 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  projects:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install project test dependencies
+        run: |
+          python -m pip install -e './pdac-liquid-biopsy[test]'
+          python -m pip install -r hrv-ecg/requirements-test.txt
+      - name: Fetch pinned public PDAC data
+        working-directory: pdac-liquid-biopsy
+        run: pdac-panel fetch
+      - name: Test PDAC
+        working-directory: pdac-liquid-biopsy
+        run: python -m pytest -q
+      - name: Reproduce PDAC analysis
+        working-directory: pdac-liquid-biopsy
+        run: pdac-panel run
+      - name: Check legacy HRV source and synthetic smoke tests
+        working-directory: hrv-ecg
+        run: python -m pytest -q

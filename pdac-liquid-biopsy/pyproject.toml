@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pdac-panel"
+version = "0.1.0"
+description = "Liquid biopsy biomarker panels for the early detection of pancreatic cancer: my 2022 research proposal, run on the public data it named."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["numpy", "pandas", "scikit-learn", "openpyxl"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+pdac-panel = "pdac_panel.cli:main"
+
+[tool.setuptools]
+packages = ["pdac_panel"]
